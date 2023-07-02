@@ -81,10 +81,31 @@ TW_INCLUDE_FASTBOOTD := true
 
 
 # Recovery
-#TARGET_RECOVERY_FSTAB := $(DEVICE_PATH)/recovery/root/system/etc/recovery.fstab
+TARGET_RECOVERY_FSTAB := $(DEVICE_PATH)/recovery/root/system/etc/recovery.fstab
 BOARD_INCLUDE_RECOVERY_DTBO := true
 TARGET_USERIMAGES_USE_EXT4 := true
 TARGET_USERIMAGES_USE_F2FS := true
+
+# Recovery modules
+TARGET_RECOVERY_DEVICE_MODULES += \
+    libkeymaster4 \
+    android.hardware.gatekeeper@1.0-impl.so/
+    gatekeeper.default.so/
+    libMcgatekeeper.so/
+    libSoftGatekeeper.so/
+# Crypto
+TW_INCLUDE_CRYPTO := true
+TW_INCLUDE_FBE_METADATA_DECRYPT := true
+TW_INCLUDE_CRYPTO_FBE := true
+TW_USE_FSCRYPT_POLICY := 1
+
+TW_RECOVERY_ADDITIONAL_RELINK_LIBRARY_FILES += \
+    $(TARGET_OUT_SHARED_LIBRARIES)/libkeymaster4.so \
+    $(TARGET_OUT_SHARED_LIBRARIES)/libMcgatekeeper.so \
+    $(TARGET_OUT_SHARED_LIBRARIES)/android.hardware.gatekeeper@1.0-impl.so \
+    $(TARGET_OUT_SHARED_LIBRARIES)/gatekeeper.default.so \
+    $(TARGET_OUT_SHARED_LIBRARIES)/libSoftGatekeeper.so \
+
 
 # Security patch level
 VENDOR_SECURITY_PATCH := 2021-08-01
@@ -103,6 +124,9 @@ VENDOR_SECURITY_PATCH := 2099-12-31
 PLATFORM_VERSION := 16.1.0
 
 # TWRP Configuration
+TW_BRIGHTNESS_PATH := "/sys/class/leds/lcd-backlight/brightness"
+TW_MAX_BRIGHTNESS := 2047
+TW_DEFAULT_BRIGHTNESS := 1200
 TW_THEME := portrait_hdpi
 TW_EXTRA_LANGUAGES := true
 TW_SCREEN_BLANK_ON_BOOT := true
